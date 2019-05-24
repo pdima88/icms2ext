@@ -1,0 +1,27 @@
+{
+    "name": "pdima88/icms2ext",
+    "description": "Instant CMS 2 extras",
+    "type": "library",
+    "require": {
+        "frontpack/composer-assets-plugin": "^0.9.4",
+        "pdima88/pdgrid": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Puchkin Dmitriy",
+            "email": "pdima88@mail.ru"
+        }
+    ],
+    "extra": {
+        "assets-target": "templates/default/assets/icms2ext",
+        "assets-files": [
+            "assets"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "pdima88\\icms2ext\\": "/"
+        }
+    } 
+}
