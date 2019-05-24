@@ -7,23 +7,25 @@ use pdima88\phpassets\Assets;
 $this->addJS('templates/default/js/jquery-cookie.js');
 $this->addJS('templates/default/js/admin-content.js');
 
-$this->setPageTitle($page_title);
+if (isset($page_title)) {
+    $this->setPageTitle($page_title);
+    $this->addBreadcrumb($page_title, $page_url);
+}
 
-$this->addBreadcrumb($page_title, $page_url);
-
-$this->addToolButton(array(
+/*$this->addToolButton(array(
     'class' => 'excel',
     'title' => 'Экспорт',
     'href'  => $grid->appendSortAndFilterParams($page_url.'?export=csv'),
     'target' => '_blank',
-));
+));*/
 
 ?>
 
 <script type="text/javascript">
     $(function(){
-        $('.cp_toolbar .excel a').addClass('s4y-grid-<?= $grid->id ?>-export')
-            .attr('data-url', $.pdgrid.appendUrlParams($('#s4y_grid_<?= $grid->id ?>').attr('data-url'), {export:'csv'}));
+        <?php if (isset($toolbar)) {
+            echo $toolbar->exportButtonsInitScript($grid);
+        } ?>
     });
 </script>
 

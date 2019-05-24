@@ -1,34 +1,28 @@
 <?php
 use pdima88\phpassets\Assets;
+use pdima88\icms2ext\ToolbarHelper;
 /**
  * @var cmsTemplate $this
  *
  * @var string $page_title
  * @var string $page_url
  * @var array $tree
+ * @var string $treeitem_detail_url
  * @var \pdgrid\Grid $grid
  * @var array $toolbar
  * @var string $toolbar_hook
  */
-$this->addJS('templates/default/js/jquery-cookie.js');
+
 $this->addJS('templates/default/js/datatree.js');
 $this->addCSS('templates/default/css/datatree.css');
-$this->addJS('templates/default/js/admin-content.js');
 
 $this->setPageTitle($page_title);
 
 $this->addBreadcrumb($page_title, $page_url);
 
-$export = [];
-
-foreach ($toolbar as $toolButtonId => $toolButton) {
-    if (isset($toolButton['export'])) {
-        if (!isset($toolButton['class'])) $toolButton['class'] = $toolButtonId;
-        $export[] = $toolButton;
-    }
-    $toolButtonClass = $toolButton['class'] ?? $toolButtonId;
-    $toolButton['class'] = $toolButtonClass;
-    $this->addToolButton($toolButton);
+if (isset($toolbar)) {
+    $toolbar = new ToolbarHelper($toolbar);
+    $toolbar->addToolButtons();
 }
 
 if (isset($toolbar_hook)) {
@@ -50,12 +44,13 @@ if (isset($toolbar_hook)) {
                 </ul>
             </div>
 
+            
+            
             <script type="text/javascript">
                 $(function(){
-                    <?php foreach ($export as $exportButton) { ?>
-                    $('.cp_toolbar .<?= $exportButton['class'] ?> a').addClass('pdgrid-<?= $grid->id ?>-export')
-                        .attr('data-url', $.pdgrid.appendUrlParams($('#pdgrid_<?= $grid->id ?>').attr('data-url'), {export:'<?= $exportButton['export'] ?>'}));
-                    <?php } ?>
+                    <?php if (isset($toolbar)) {
+                        echo $toolbar->toolbarButtonsInitScript($grid);
+                     } ?>
                     var postInit = false;
                     $("#datatree").dynatree({
 
@@ -88,45 +83,20 @@ if (isset($toolbar_hook)) {
                             var key = node.data.key;
                             var keyPath = node.getKeyPath();
 
-                            <?php if (isset($treeitem_info_url)) { ?>
-                            var $divInfo = $('#divItemInfo');
+                            <?php if (isset($treeitem_detail_url)) { ?>
+                            var $divItemDetail = $('#divItemDetail');
                             if (key+0) {
-                                var infoLoadUrl = "<?= $treeitem_info_url ?>" + keyPath;
-                                $divInfo.load(infoLoadUrl);
+                                var itemDetailLoadUrl = "<?= $treeitem_detail_url ?>" + keyPath;
+                                $divItemDetail.load(itemDetailLoadUrl);
                             } else {
-                                $divInfo.html('');
+                                $divItemDetail.html('');
                             }
-                            <?php } ?>
+                            <?php }
 
-                            if (key == 0) {
-
-                                <?php foreach ($toolbar as $toolButtonId => $toolButton) {
-                                    $toolButtonClass = $toolButton['class'] ?? $toolButtonId;
-                                    if ($toolButton['treeitem_hide'] ?? false) {
-                                    ?>
-                                        $('.cp_toolbar .<?= $toolButtonClass ?> a').hide();
-                                    <?php }
-                                    if ($toolButton['treeitem_href_suffix'] ?? false) {
-                                    ?>
-                                        $('.cp_toolbar .<?= $toolButtonClass ?> a').attr('href', "<?= $toolButton['href'] ?>");
-                                    <?php }
-                                }
-                                ?>
-                            } else {
-                                <?php foreach ($toolbar as $toolButtonId => $toolButton) {
-                                    $toolButtonClass = $toolButton['class'] ?? $toolButtonId;
-                                    if ($toolButton['treeitem_href_suffix'] ?? false) {
-                                    ?>
-                                    $('.cp_toolbar .<?= $toolButtonClass ?> a').attr('href', "<?=
-                                        $toolButton['href'].$toolButton['treeitem_href_suffix'] ?>".replace(/\{id\}/, key));
-                                    <?php }
-                                    if ($toolButton['treeitem_hide'] ?? false) {
-                                    ?>
-                                        $('.cp_toolbar .<?= $toolButtonClass ?> a').show();
-                                    <?php }
-                                }
-                                ?>
+                            if (isset($toolbar)) {
+                                echo $toolbar->idReplaceScript();
                             }
+                            ?>
 
                             if (!postInit) {
                                 var loadUrl = "<?= $page_url ?>" + keyPath;
@@ -146,24 +116,12 @@ if (isset($toolbar_hook)) {
 
         </td>
         <td class="main" valign="top">
-            <div id="divItemInfo"></div>
+            <div id="divItemDetail"></div>
 
-            <div class="cp_toolbar">
-                <?php $this->toolbar(); ?>
-            </div>
-            <?php
-
-
-            $gridStr = $grid->render();
-            Assets::addStyle('display:none', '.pdgrid-action-btn');
-
-            $this->addHead(Assets::getCss());
-            $this->addOutput(Assets::getJs());
-
-            echo $gridStr;
+            <?php $this->renderAsset('icms2ext/backend/grid', [
+                'grid' => $grid
+            ]);
             ?>
-
-
         </td>
     </tr>
 </table>
