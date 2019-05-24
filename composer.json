@@ -16,7 +16,7 @@
     "extra": {
         "assets-target": "/templates/default/assets/icms2ext",
         "assets-files": [
-            "assets\backend"
+            "assets/backend"
         ]
     },
     "autoload": {
