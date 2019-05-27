@@ -1,5 +1,8 @@
 <?php
+use pdima88\icms2ext\FormHelper;
+
 /** @var cmsTemplate $this */
+
 $this->setPageTitle($title);
 
 if (isset($breadcrumbs)) {
@@ -20,7 +23,7 @@ $this->addToolButton(array(
 $this->addToolButton([
     'class' => 'cancel',
     'title' => 'Отмена',
-    'href'  => 'javascript:history.back(-1);'
+    'href'  => FormHelper::getBackURL()
 ]);
 ?>
 

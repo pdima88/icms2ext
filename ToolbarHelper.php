@@ -15,8 +15,10 @@ class ToolbarHelper {
     function addToolButtons() {
 
         foreach ($this->toolbar as $toolButtonId => $toolButton) {
+            if (!isset($toolButton['href'])) $toolButton['href']  = '#';
             if (isset($toolButton['export'])) {
                 if (!isset($toolButton['class'])) $toolButton['class'] = $toolButtonId;
+
                 $this->export[] = $toolButton;
             }
             $toolButtonClass = $toolButton['class'] ?? $toolButtonId;
@@ -41,6 +43,8 @@ class ToolbarHelper {
             $script .= '$(".cp_toolbar .' . $exportButton['class'] . ' a")
                             .addClass("pdgrid-' . $grid->id . '-export")
                             .attr("data-url", $.pdgrid.appendUrlParams($("#pdgrid_' . $grid->id . '").attr("data-url"),
+                                                    {export:"' . $exportButton['export'] . '"})).attr("data-export", "' . $exportButton['export'] . '")
+                            .attr("href", $.pdgrid.appendUrlParams($("#pdgrid_' . $grid->id . '").attr("data-current-url"),
                                                     {export:"' . $exportButton['export'] . '"}));';
         }
 
@@ -58,6 +62,7 @@ class ToolbarHelper {
         $script = '';
         $script_back = '';
         foreach ($this->toolbar as $toolButtonId => $toolButton) {
+            if (!isset($toolButton['href'])) $toolButton['href']  = '#';
             $toolButtonClass = $toolButton['class'] ?? $toolButtonId;
             $href = $toolButton['href'];
             $backHref = '';

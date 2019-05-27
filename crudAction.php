@@ -17,6 +17,12 @@ abstract class crudAction extends \cmsAction {
     protected $titles = [];
     protected $messages = [];
 
+    public function __construct($controller, array $params)
+    {
+        parent::__construct($controller, $params);
+        $this->pageUrl = href_to($this->root_url, $this->current_action);
+    }
+
     public function run($do = null) {
         $res = false;
         if (isset($do)) {
@@ -76,9 +82,9 @@ abstract class crudAction extends \cmsAction {
             $errors = $form->validate($this, $item);
 
             if (!$errors){
-                $this->save(null, $item);
+                $id = $this->save(null, $item);
                 cmsUser::addSessionMessage($this->messages[$this->doAction] ?? 'Добавлено успешно', 'success');
-                $this->redirectBack();
+                $this->afterAdd($id);
             }
 
             if ($errors){
@@ -114,7 +120,7 @@ abstract class crudAction extends \cmsAction {
         }
 
         if (!isset($item)) {
-            $item = $this->model->getItemById($this->tableName, $id);
+            $item = $this->getItem($id);
 
             if (!$item) {
                 cmsUser::addSessionMessage($this->messages['error_edit_no_item'] ?? 'Запись не найдена', 'error');
@@ -130,7 +136,7 @@ abstract class crudAction extends \cmsAction {
 
         if ($is_submitted) {
 
-            $item = $form->parse($this->request, $is_submitted);
+            $item = $form->parse($this->request, $is_submitted, $item);
 
             $errors = $form->validate($this, $item);
 
@@ -185,9 +191,10 @@ abstract class crudAction extends \cmsAction {
 
     function save($id, $data) {
         if (!isset($id)) {
-            $this->model->insert($this->tableName, $data);
+            return $this->model->insert($this->tableName, $data);
         } else {
-            $this->model->update($this->tableName, $id, $data);
+            if ($this->model->update($this->tableName, $id, $data)) return $id;
+            return false;
         }
     }
 
@@ -202,5 +209,13 @@ abstract class crudAction extends \cmsAction {
 
     function delete($id) {
         $this->model->delete($this->tableName, $id);
+    }
+
+    function getItem($id) {
+        return $this->model->getItemById($this->tableName, $id);
+    }
+
+    function afterAdd($id = null) {
+        $this->redirectBack();
     }
 }

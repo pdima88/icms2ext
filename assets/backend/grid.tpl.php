@@ -1,4 +1,5 @@
 <?php
+use pdima88\icms2ext\ToolbarHelper;
 use pdima88\phpassets\Assets;
 /**
  * @var cmsTemplate $this
@@ -11,20 +12,18 @@ if (isset($page_title)) {
     $this->setPageTitle($page_title);
     $this->addBreadcrumb($page_title, $page_url);
 }
-
-/*$this->addToolButton(array(
-    'class' => 'excel',
-    'title' => 'Экспорт',
-    'href'  => $grid->appendSortAndFilterParams($page_url.'?export=csv'),
-    'target' => '_blank',
-));*/
-
+$initToolbar = false;
+if (isset($toolbar) && !($toolbar instanceof ToolbarHelper)) {
+    $toolbar = new ToolbarHelper($toolbar);
+    $toolbar->addToolButtons();
+    $initToolbar = true;
+}
 ?>
 
 <script type="text/javascript">
     $(function(){
-        <?php if (isset($toolbar)) {
-            echo $toolbar->exportButtonsInitScript($grid);
+        <?php if ($initToolbar) {
+            echo $toolbar->toolbarButtonsInitScript($grid);
         } ?>
     });
 </script>

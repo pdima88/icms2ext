@@ -101,7 +101,7 @@ if (isset($toolbar_hook)) {
                             if (!postInit) {
                                 var loadUrl = "<?= $page_url ?>" + keyPath;
                                 $('#pdgrid_<?= $grid->id ?>').attr('data-url', loadUrl).attr('data-ajax', loadUrl);
-                                $('.pdgrid-<?= $grid->id ?>-export').attr('data-url', $.pdgrid.appendUrlParams(loadUrl, {export: ''}));
+                                $('.pdgrid-<?= $grid->id ?>-export').attr('data-url', $.pdgrid.appendUrlParams(loadUrl, {export: $('.pdgrid-<?= $grid->id ?>-export').attr('data-export')}));
 
                                 $.pdgrid.load($.pdgrid.$gridById('<?= $grid->id ?>'), {
                                     url: loadUrl, ajax: loadUrl
