@@ -190,4 +190,17 @@ abstract class crudAction extends \cmsAction {
             $this->model->update($this->tableName, $id, $data);
         }
     }
+
+    public function actionDelete() {
+        $id = $this->getParam();
+        if (!$id) { cmsCore::error404(); }
+        $this->delete($id);
+        cmsUser::addSessionMessage($this->messages[$this->doAction] ?? 'Запись была удалена', 'success');
+
+        $this->redirectBack();
+    }
+
+    function delete($id) {
+        $this->model->delete($this->tableName, $id);
+    }
 }
