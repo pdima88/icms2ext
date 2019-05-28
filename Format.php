@@ -6,6 +6,7 @@ class Format {
     public static $durationStr = [
         'years' => '%d год|%d года|%d лет',
         'months' => '%d месяц|%d месяца|%d месяцев',
+        'weeks' => '%d неделя|%d недели|%d недель',
         'days' => '%d день|%d дня|%d дней',
     ];
 
@@ -14,11 +15,14 @@ class Format {
         if ($d == 0) {
             return '';
         } elseif ($d >= 365 && $d % 365 <= $d / 365) {
-            $years = (int) $d / 365;
+            $years = (int)( $d / 365);
             return self::numCase(self::$durationStr['years'], $years);
         } elseif ($d >= 30 && $d % 30 <= (int) ($d / 30)) {
             $months = (int) ($d / 30);
             return self::numCase(self::$durationStr['months'], $months);
+        } elseif ($d == 7 || $d == 14 || $d == 21) {
+            $weeks = (int) ($d / 7);
+            return self::numCase(self::$durationStr['weeks'], $weeks);
         } else {
             return self::numCase(self::$durationStr['days'], $d);
         }
