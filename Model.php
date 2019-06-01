@@ -6,6 +6,14 @@ class Model extends \cmsModel {
 
     /** @var cmsDatabase $db */
 
+    /**
+     * @param $name
+     * @return Table
+     */
+    function getTable($name) {
+        $className = 'table'.string_ucfirst($this->name).'_'.$name;
+        return Table::getInstance($className);
+    }
 
     function getTableNameWithPrefix($table_name) {
         return $this->db->prefix.$table_name;

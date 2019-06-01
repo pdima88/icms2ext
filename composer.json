@@ -4,8 +4,7 @@
     "type": "library",
     "require": {
         "frontpack/composer-assets-plugin": "^0.9.4",
-        "pdima88/pdgrid": "dev-master",
-        "pdima88/zf1ext": "dev-master"
+        "pdima88/pdgrid": "dev-master"
     },
     "license": "MIT",
     "authors": [
