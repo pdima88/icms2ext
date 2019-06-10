@@ -3,7 +3,7 @@
     "description": "Instant CMS 2 extras",
     "type": "library",
     "require": {
-        "frontpack/composer-assets-plugin": "^0.9.4",
+        "pdima88/composer-assets-plugin": "^1.0",
         "pdima88/pdgrid": "dev-master"
     },
     "license": "MIT",
