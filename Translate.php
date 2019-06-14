@@ -1,6 +1,7 @@
 <?php
 namespace pdima88\icms2ext {
 
+    use cmsCore;
     use cmsDatabase;
     use cmsCache;
     use Exception;
@@ -80,7 +81,42 @@ namespace pdima88\icms2ext {
                 return vsprintf($t, $args);
             }
         }
-    
+
+        public $prefix;
+        private $id;
+        private $params;
+
+        public function __construct($prefix)
+        {
+            $this->prefix = $prefix;
+        }
+
+        /**
+         * @param string $id
+         * @param string $default
+         * @param $params
+         * @return string
+         */
+        public function __invoke($id = null, $default = null, ...$params) {
+            if (!isset($id)) {
+                $default = ob_get_clean();
+                $id = $this->id;
+                $params = $this->params;
+                $this->id = '';
+                $this->params = '';
+            }
+            return self::t($this->prefix . $id, $default, $params, cmsCore::getLanguageName(), true);
+        }
+
+        public function _($id, ...$params) {
+            $this->id = $id;
+            $this->params = $params;
+            ob_start();
+        }
+
+        public function _t() {
+            echo $this->__invoke();
+        }
     }
 }
 
@@ -88,7 +124,14 @@ namespace {
 
     use pdima88\icms2ext\Translate;
 
-    function t($id, $default = null, ...$params) {
+    function t($id = null, $default = null, ...$params) {
+        if (!isset($id)) {
+            $default = ob_get_clean();
+            $id = Translate::$t_Id;
+            $params = Translate::$t_Params;
+            Translate::$t_Id = '';
+            Translate::$t_Params = [];
+        }
         return Translate::t($id, $default, $params, cmsCore::getLanguageName(), true);
     }
     
@@ -96,16 +139,10 @@ namespace {
         Translate::$t_Id = $id;
         Translate::$t_Params = $params;
         ob_start();
-        return true;
     }
     
     function _t() {
-        $default = ob_get_clean();
-        $id = Translate::$t_Id;
-        $params = Translate::$t_Params;
-        Translate::$t_Id = '';
-        Translate::$t_Params = [];
-        return Translate::t($id, $default, $params, cmsCore::getLanguageName(), true);
+        echo t();
     }
 
 }
