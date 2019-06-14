@@ -2,6 +2,7 @@
 
 namespace pdima88\icms2ext;
 
+use cmsDatabase;
 use Zend_Db_Table_Abstract;
 use Zend_Db_Table_Select;
 use Zend_Db_Select;
@@ -16,12 +17,17 @@ abstract class Table extends Zend_Db_Table_Abstract
 {
     static $defaultSchema = '';
 
+    static function prefix($table = '') {
+        return cmsDatabase::getInstance()->prefix.$table;
+    }
+
     function __construct($config = [])
     {
         if (!isset($this->_schema)) {
-            $this->_schema = \cmsDatabase::getInstance()->getOption('db_base');
+            $config = Model::zendDb()->getConfig();
+            $this->_schema = $config['dbname'];
         }
-        $this->_name = \cmsDatabase::getInstance()->prefix.$this->_name;
+        $this->_name = self::prefix($this->_name);
         parent::__construct($config);
     }
 
