@@ -37,7 +37,11 @@ class Model extends \cmsModel {
      * @return Table
      */
     function getTable($name) {
-        $className = 'table'.string_ucfirst($this->name).'_'.$name;
+        if ($this->ns) {
+            $className = $this->ns.'\\tables\\table_'.$name;
+        } else {
+            $className = 'table' . string_ucfirst($this->name) . '_' . $name;
+        }
         return Table::getInstance($className);
     }
 
