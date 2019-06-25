@@ -321,7 +321,7 @@ class Select extends Zend_Db_Select {
             throw new Exception('Invalid column definition for relation '.$s);
         }
         return [
-            'table' => ($schema ? $schema.'.' : '').$table,
+            'table' => ($schema ? $schema.'.' : '').cmsDatabase::getInstance()->replacePrefix($table),
             'column' => $column
         ];
     }
