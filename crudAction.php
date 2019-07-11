@@ -16,6 +16,7 @@ abstract class crudAction extends \cmsAction {
     protected $pageUrl = '';
     protected $titles = [];
     protected $messages = [];
+    protected $indexTpl = null;
 
     public function __construct($controller, array $params)
     {
@@ -178,7 +179,7 @@ abstract class crudAction extends \cmsAction {
         }
 
         return [
-            'tpl' => 'backend/'.$this->current_action,
+            'tpl' => 'backend/'.($this->indexTpl ?? $this->current_action),
             'data' => [
                 'page_title' => $this->pageTitle,
                 'page_url' => $this->pageUrl,
