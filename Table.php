@@ -131,8 +131,8 @@ abstract class Table extends Zend_Db_Table_Abstract
 
     /**
      * Выполняет обновление записи по id
-     * @param $id Идентификатор записи
-     * @param $data Массив изменяемых полей
+     * @param int $id Идентификатор записи
+     * @param array $data Массив изменяемых полей
      * @return int Кол-во затронутых записей
      */
     static function updateById($id, $data) {
