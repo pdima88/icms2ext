@@ -4,6 +4,7 @@ namespace pdima88\icms2ext;
 
 use cmsDatabase;
 use Zend_Db_Table_Abstract;
+use Zend_Db_Table_Rowset_Abstract;
 use Zend_Db_Table_Select;
 use Zend_Db_Select;
 use Zend_Db_Table_Row;
