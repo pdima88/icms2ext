@@ -14,7 +14,7 @@ use pdima88\icms2ext\ToolbarHelper;
  */
 
 $this->addJS('templates/default/js/datatree.js');
-$this->addCSS('templates/default/css/datatree.css');
+$this->addCSS('templates/admincoreui/css/datatree.css');
 
 $this->setPageTitle($page_title);
 
@@ -30,21 +30,28 @@ if (isset($toolbar_hook)) {
 }
 ?>
 
-<h1><?= $page_title ?></h1>
-
-<table class="layout">
-    <tr>
-        <td class="sidebar" valign="top">
-
-            <div id="datatree">
-                <ul id="treeData" style="display: none">
+<div class="row align-items-stretch mb-4">
+    <div class="col-auto quickview-wrapper" id="left-quickview">
+        <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
+        <div id="datatree" class="bg-white h-100 pt-3 pb-3 pr-3">
+            <ul id="treeData" style="display: none">
                     <?php foreach($tree as $treeid=>$treeitem){ ?>
                         <li id="<?php echo $treeitem['id'];?>" class="folder"><?php echo $treeitem['title']; ?></li>
                     <?php } ?>
-                </ul>
-            </div>
+            </ul>
+        </div>
+    </div>
+    <div class="col">
+        <div id="divItemDetail"></div>
 
-            
+        <?php $this->renderAsset('icms2ext/backend/grid', [
+            'grid' => $grid
+        ]);
+        ?>
+    </div>
+</div>
+
+          
             
             <script type="text/javascript">
                 $(function(){
@@ -114,16 +121,5 @@ if (isset($toolbar_hook)) {
                 });
             </script>
 
-        </td>
-        <td class="main" valign="top">
-            <div id="divItemDetail"></div>
-
-            <?php $this->renderAsset('icms2ext/backend/grid', [
-                'grid' => $grid
-            ]);
-            ?>
-        </td>
-    </tr>
-</table>
 
 

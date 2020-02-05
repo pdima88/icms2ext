@@ -28,7 +28,7 @@ if (isset($toolbar) && !($toolbar instanceof ToolbarHelper)) {
     });
 </script>
 
-<div class="cp_toolbar">
+<div class="cp_toolbar navbar navbar-light bg-light my-2 pl-0 py-1">
     <?php $this->toolbar(); ?>
 </div>
 <?php
